@@ -8,10 +8,7 @@ import {
   toggleTask,
   updateTask,
 } from "./task.service";
-import type {
-  CreateTaskInput,
-  UpdateTaskInput,
-} from "./task.schema";
+import type { CreateTaskInput, UpdateTaskInput } from "./task.schema";
 
 export const createTaskHandler = async (req: Request, res: Response) => {
   const task = await createTask(req.user!.id, req.body as CreateTaskInput);

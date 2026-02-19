@@ -18,8 +18,10 @@ export function useLogin() {
       toast.success(
         `Welcome back, ${data.data.user.name || data.data.user.email}!`,
       );
-      // Use window.location.href to ensure middleware re-runs
-      window.location.href = "/dashboard";
+      // Small delay to ensure cookie is written before proxy.ts checks it
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 100);
     },
     onError: (error: any) => {
       toast.error(
@@ -38,8 +40,13 @@ export function useRegister() {
     mutationFn: registerApi,
     onSuccess: (data) => {
       setAuth(data.data.user, data.data.accessToken);
-      toast.success("Account created! Welcome to TaskFlow 🎉");
-      window.location.href = "/dashboard";
+      toast.success(
+        `Welcome back, ${data.data.user.name || data.data.user.email}!`,
+      );
+      // Small delay to ensure cookie is written before proxy.ts checks it
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 100);
     },
     onError: (error: any) => {
       toast.error(

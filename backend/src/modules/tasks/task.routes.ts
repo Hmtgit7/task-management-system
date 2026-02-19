@@ -20,7 +20,7 @@ export const taskRouter = Router();
 
 taskRouter.use(authenticate);
 
-taskRouter.get("/", validate(getTasksQuerySchema), getTasksHandler);
+taskRouter.get("/", validate(getTasksQuerySchema, "query"), getTasksHandler);
 taskRouter.post("/", validate(createTaskSchema), createTaskHandler);
 taskRouter.get("/:id", getTaskHandler);
 taskRouter.patch("/:id", validate(updateTaskSchema), updateTaskHandler);

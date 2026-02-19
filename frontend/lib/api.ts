@@ -4,22 +4,33 @@ import { useAuthStore } from "@/store/auth-store";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000",
-  withCredentials: true, // sends httpOnly refresh token cookie
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Attach access token to every request
+// Routes that should NEVER trigger auto-refresh
+const AUTH_ROUTES = [
+  "/auth/login",
+  "/auth/register",
+  "/auth/refresh",
+  "/auth/logout",
+];
+
+const isAuthRoute = (url?: string) =>
+  AUTH_ROUTES.some((route) => url?.includes(route));
+
+// Attach access token
 api.interceptors.request.use((config) => {
   const token = useAuthStore.getState().accessToken;
-  if (token) {
+  if (token && !isAuthRoute(config.url)) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
-// Auto-refresh on 401
+// Auto-refresh on 401 (skip for auth routes)
 let isRefreshing = false;
 let failedQueue: Array<{
   resolve: (value: string) => void;
@@ -38,6 +49,11 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+
+    // Skip interceptor for auth routes entirely
+    if (isAuthRoute(originalRequest?.url)) {
+      return Promise.reject(error);
+    }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
@@ -64,7 +80,9 @@ api.interceptors.response.use(
       } catch (err) {
         processQueue(err, null);
         useAuthStore.getState().logout();
-        window.location.href = "/login";
+        if (typeof window !== "undefined") {
+          window.location.href = "/login";
+        }
         return Promise.reject(err);
       } finally {
         isRefreshing = false;

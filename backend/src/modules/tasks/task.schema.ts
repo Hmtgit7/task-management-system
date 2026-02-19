@@ -5,7 +5,9 @@ const taskBaseSchema = z.object({
   title: z.string().min(1).max(255),
   description: z.string().optional(),
   priority: z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]).optional(),
-  dueDate: z.string().optional(), // ISO string
+  // Accept "YYYY-MM-DD" or full ISO string or empty string
+  dueDate: z.string().optional().or(z.literal("")),
+  status: z.enum(["PENDING", "IN_PROGRESS", "COMPLETED"]).optional(),
 });
 
 export const createTaskSchema = taskBaseSchema;

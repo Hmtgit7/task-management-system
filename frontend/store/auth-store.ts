@@ -1,6 +1,6 @@
 // store/auth-store.ts
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 type User = {
   id: string;
@@ -17,6 +17,29 @@ type AuthState = {
   logout: () => void;
 };
 
+// Cookie-based storage so proxy.ts can read it server-side
+const cookieStorage = {
+  getItem: (name: string): string | null => {
+    if (typeof document === "undefined") return null;
+    const match = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith(`${name}=`));
+    return match ? decodeURIComponent(match.split("=")[1]) : null;
+  },
+  setItem: (name: string, value: string): void => {
+    if (typeof document === "undefined") return;
+    // 7 days expiry, SameSite=Strict
+    const expires = new Date(
+      Date.now() + 7 * 24 * 60 * 60 * 1000,
+    ).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Strict`;
+  },
+  removeItem: (name: string): void => {
+    if (typeof document === "undefined") return;
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+  },
+};
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
@@ -31,9 +54,11 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "auth-storage",
+      storage: createJSONStorage(() => cookieStorage),
       partialize: (state) => ({
         user: state.user,
         accessToken: state.accessToken,
+        isAuthenticated: state.isAuthenticated,
       }),
     },
   ),
