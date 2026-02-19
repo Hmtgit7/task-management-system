@@ -67,7 +67,7 @@ export function TaskForm({ task, onSuccess }: TaskFormProps) {
     const payload = {
       title: data.title,
       description: data.description || undefined,
-      priority: data.priority,
+      priority: data.priority || "MEDIUM",
       dueDate: data.dueDate || undefined,
     };
 
