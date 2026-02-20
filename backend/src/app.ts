@@ -16,18 +16,10 @@ import { categoryRouter } from "@modules/categories/category.routes";
 
 export const app = express();
 
-// Support comma-separated multiple origins (e.g. "https://a.vercel.app,https://b.vercel.app")
-const allowedOrigins = env.CORS_ORIGIN.split(",").map((o) => o.trim());
-
 app.use(helmet());
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (curl, mobile apps, same-origin)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      callback(new Error(`CORS: origin ${origin} not allowed`));
-    },
+    origin: env.CORS_ORIGIN,
     credentials: true,
   }),
 );
