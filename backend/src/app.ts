@@ -16,25 +16,21 @@ import { categoryRouter } from "@modules/categories/category.routes";
 
 export const app = express();
 
-// Parse comma-separated origins (e.g. "https://foo.vercel.app,http://localhost:3000")
-const allowedOrigins = env.CORS_ORIGIN.split(",").map((o) => o.trim()).filter(Boolean);
-
-const corsOptions: cors.CorsOptions = {
-  origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, curl, server-to-server)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    callback(new Error(`CORS: origin '${origin}' not allowed`));
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
+// Support comma-separated multiple origins (e.g. "https://a.vercel.app,https://b.vercel.app")
+const allowedOrigins = env.CORS_ORIGIN.split(",").map((o) => o.trim());
 
 app.use(helmet());
-app.use(cors(corsOptions));
-// Explicitly reply 200 to all preflight OPTIONS requests
-app.options("*", cors(corsOptions));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (curl, mobile apps, same-origin)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      callback(new Error(`CORS: origin ${origin} not allowed`));
+    },
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
