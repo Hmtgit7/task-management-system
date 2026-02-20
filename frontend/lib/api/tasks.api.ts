@@ -1,7 +1,7 @@
 // lib/api/tasks.api.ts
-import api from "@/lib/api";
+import api from "../api";
 
-export type Task = {
+export interface Task {
   id: string;
   title: string;
   description?: string | null;
@@ -11,78 +11,78 @@ export type Task = {
   userId: string;
   createdAt: string;
   updatedAt: string;
-};
+  categories: Category[];
+}
 
-export type TasksResponse = {
-  success: boolean;
-  data: {
-    tasks: Task[];
-    pagination: {
-      page: number;
-      limit: number;
-      total: number;
-      pages: number;
-    };
+export interface Category {
+  id: string;
+  name: string;
+  color: string;
+  userId: string;
+}
+
+export interface TasksResponse {
+  tasks: Task[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
   };
-};
+}
 
-export type CreateTaskPayload = {
-  title: string;
-  description?: string;
-  priority?: Task["priority"];
-  dueDate?: string;
-};
-
-export type UpdateTaskPayload = Partial<CreateTaskPayload> & {
-  status?: Task["status"];
-};
-
-export type GetTasksParams = {
+export interface GetTasksParams {
   page?: number;
   limit?: number;
-  status?: Task["status"];
+  status?: string;
+  priority?: string;
+  sort?: "createdAt" | "dueDate" | "priority";
+  direction?: "asc" | "desc";
   search?: string;
+  category?: string;
+}
+
+export interface Analytics {
+  total: number;
+  statusBreakdown: { PENDING: number; IN_PROGRESS: number; COMPLETED: number };
+  priorityBreakdown: {
+    LOW: number;
+    MEDIUM: number;
+    HIGH: number;
+    URGENT: number;
+  };
+  daily: { day: string; created: number; completed: number }[];
+  overdue: number;
+  completionRate: number;
+}
+
+export const tasksApi = {
+  getAll: (params?: GetTasksParams) =>
+    api.get<{ success: true; data: TasksResponse }>("/tasks", { params }),
+
+  getOne: (id: string) =>
+    api.get<{ success: true; data: Task }>(`/tasks/${id}`),
+
+  create: (data: Partial<Task> & { categoryIds?: string[] }) =>
+    api.post<{ success: true; data: Task }>("/tasks", data),
+
+  update: (id: string, data: Partial<Task> & { categoryIds?: string[] }) =>
+    api.patch<{ success: true; data: Task }>(`/tasks/${id}`, data),
+
+  delete: (id: string) => api.delete(`/tasks/${id}`),
+
+  toggle: (id: string) =>
+    api.patch<{ success: true; data: Task }>(`/tasks/${id}/toggle`),
+
+  getAnalytics: () =>
+    api.get<{ success: true; data: Analytics }>("/tasks/analytics"),
 };
 
-export const getTasksApi = async (
-  params: GetTasksParams,
-): Promise<TasksResponse> => {
-  const res = await api.get<TasksResponse>("/tasks", { params });
-  return res.data;
-};
+export const categoriesApi = {
+  getAll: () => api.get<{ success: true; data: Category[] }>("/categories"),
 
-export const getTaskApi = async (
-  id: string,
-): Promise<{ success: boolean; data: Task }> => {
-  const res = await api.get(`/tasks/${id}`);
-  return res.data;
-};
+  create: (data: { name: string; color: string }) =>
+    api.post<{ success: true; data: Category }>("/categories", data),
 
-export const createTaskApi = async (
-  data: CreateTaskPayload,
-): Promise<{ success: boolean; data: Task }> => {
-  const res = await api.post("/tasks", data);
-  return res.data;
-};
-
-export const updateTaskApi = async ({
-  id,
-  data,
-}: {
-  id: string;
-  data: UpdateTaskPayload;
-}): Promise<{ success: boolean; data: Task }> => {
-  const res = await api.patch(`/tasks/${id}`, data);
-  return res.data;
-};
-
-export const deleteTaskApi = async (id: string): Promise<void> => {
-  await api.delete(`/tasks/${id}`);
-};
-
-export const toggleTaskApi = async (
-  id: string,
-): Promise<{ success: boolean; data: Task }> => {
-  const res = await api.patch(`/tasks/${id}/toggle`);
-  return res.data;
+  delete: (id: string) => api.delete(`/categories/${id}`),
 };

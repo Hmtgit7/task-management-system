@@ -1,0 +1,8 @@
+import { z } from "zod";
+
+export const createCategorySchema = z.object({
+  name: z.string().min(1).max(50),
+  color: z.string().regex(/^#[0-9A-Fa-f]{6}$/, "Must be a valid hex color"),
+});
+
+export type CreateCategoryInput = z.infer<typeof createCategorySchema>;

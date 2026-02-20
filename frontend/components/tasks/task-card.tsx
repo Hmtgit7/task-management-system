@@ -1,189 +1,177 @@
 // components/tasks/task-card.tsx
 "use client";
 
-import { useState } from "react";
-import { format, isPast, isToday } from "date-fns";
-import {
-  CalendarDays,
-  CheckCircle2,
-  Circle,
-  Clock,
-  MoreHorizontal,
-  Pencil,
-  Trash2,
-} from "lucide-react";
-import type { Task } from "@/lib/api/tasks.api";
-import { PriorityBadge } from "./priority-badge";
-import { StatusBadge } from "./status-badge";
-import { useDeleteTask, useToggleTask } from "@/hooks/use-tasks";
+import { memo } from "react";
+import { format, isPast } from "date-fns";
+import { Calendar, CheckCircle2, Circle, Edit2, Trash2 } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { TaskForm } from "./task-form";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import type { Task } from "@/lib/api/tasks.api";
 
-export function TaskCard({ task }: { task: Task }) {
-  const [showEdit, setShowEdit] = useState(false);
-  const [showDelete, setShowDelete] = useState(false);
-  const { mutate: toggle, isPending: isToggling } = useToggleTask();
-  const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask();
+const PRIORITY_CONFIG = {
+  LOW: {
+    label: "Low",
+    class: "bg-slate-500/10  text-slate-400  border-slate-500/20",
+  },
+  MEDIUM: {
+    label: "Medium",
+    class: "bg-blue-500/10   text-blue-400   border-blue-500/20",
+  },
+  HIGH: {
+    label: "High",
+    class: "bg-orange-500/10 text-orange-400 border-orange-500/20",
+  },
+  URGENT: {
+    label: "Urgent",
+    class: "bg-rose-500/10   text-rose-400   border-rose-500/20",
+  },
+};
 
+const STATUS_CONFIG = {
+  PENDING: { label: "Pending", class: "bg-slate-500/10  text-slate-400" },
+  IN_PROGRESS: {
+    label: "In Progress",
+    class: "bg-fuchsia-500/10 text-fuchsia-400",
+  },
+  COMPLETED: {
+    label: "Completed",
+    class: "bg-emerald-500/10 text-emerald-400",
+  },
+};
+
+interface TaskCardProps {
+  task: Task;
+  onToggle: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+}
+
+export const TaskCard = memo(function TaskCard({
+  task,
+  onToggle,
+  onEdit,
+  onDelete,
+}: TaskCardProps) {
   const isCompleted = task.status === "COMPLETED";
   const isOverdue =
-    task.dueDate &&
-    isPast(new Date(task.dueDate)) &&
-    !isCompleted &&
-    !isToday(new Date(task.dueDate));
+    !isCompleted && task.dueDate && isPast(new Date(task.dueDate));
+
+  const priority = PRIORITY_CONFIG[task.priority];
+  const status = STATUS_CONFIG[task.status];
 
   return (
-    <>
-      <div
-        className={cn(
-          "group flex items-start gap-3 rounded-xl border p-4 bg-card transition-all duration-200 hover:shadow-md",
-          isCompleted
-            ? "border-border/40 opacity-75"
-            : "border-border/60 hover:border-primary/30",
-        )}
-      >
-        {/* Toggle button */}
-        <button
-          onClick={() => toggle(task.id)}
-          disabled={isToggling}
-          className="mt-0.5 shrink-0 text-muted-foreground hover:text-primary transition-colors disabled:opacity-50"
-        >
-          {isCompleted ? (
-            <CheckCircle2 className="h-5 w-5 text-green-500 fill-green-500/20" />
-          ) : (
-            <Circle className="h-5 w-5" />
-          )}
-        </button>
-
-        {/* Content */}
-        <div className="flex-1 min-w-0 space-y-1.5">
-          <p
+    <Card
+      className={cn(
+        "group border border-border/60 hover:border-border transition-all duration-200 hover:shadow-md",
+        isCompleted && "opacity-60",
+        isOverdue && "border-rose-500/30 bg-rose-500/[0.02]",
+      )}
+    >
+      <CardContent className="p-4">
+        <div className="flex items-start gap-3">
+          {/* Toggle button */}
+          <button
+            onClick={onToggle}
             className={cn(
-              "text-sm font-medium leading-snug break-words",
-              isCompleted && "line-through text-muted-foreground",
+              "mt-0.5 shrink-0 h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all",
+              isCompleted
+                ? "border-emerald-500 text-emerald-500"
+                : "border-muted-foreground/40 hover:border-primary",
             )}
           >
-            {task.title}
-          </p>
+            {isCompleted ? (
+              <CheckCircle2 className="h-4 w-4 fill-emerald-500 text-white" />
+            ) : (
+              <Circle className="h-3.5 w-3.5 text-transparent" />
+            )}
+          </button>
 
-          {task.description && (
-            <p className="text-xs text-muted-foreground line-clamp-2">
-              {task.description}
-            </p>
-          )}
-
-          <div className="flex flex-wrap items-center gap-2 pt-1">
-            <PriorityBadge priority={task.priority} />
-            <StatusBadge status={task.status} />
-            {task.dueDate && (
-              <div
+          {/* Content */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between gap-2">
+              <p
                 className={cn(
-                  "flex items-center gap-1 text-xs",
-                  isOverdue
-                    ? "text-destructive font-medium"
-                    : "text-muted-foreground",
+                  "font-medium text-sm leading-tight",
+                  isCompleted && "line-through text-muted-foreground",
                 )}
               >
-                {isOverdue ? (
-                  <Clock className="h-3 w-3" />
-                ) : (
-                  <CalendarDays className="h-3 w-3" />
-                )}
-                {isOverdue ? "Overdue · " : ""}
-                {format(new Date(task.dueDate), "MMM d, yyyy")}
+                {task.title}
+              </p>
+
+              {/* Actions — show on hover */}
+              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                  onClick={onEdit}
+                >
+                  <Edit2 className="h-3.5 w-3.5" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                  onClick={onDelete}
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
               </div>
+            </div>
+
+            {task.description && (
+              <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
+                {task.description}
+              </p>
             )}
+
+            {/* Meta row */}
+            <div className="flex flex-wrap items-center gap-1.5 mt-2">
+              <Badge
+                variant="outline"
+                className={cn("text-xs border px-2 py-0", priority.class)}
+              >
+                {priority.label}
+              </Badge>
+              <Badge
+                variant="secondary"
+                className={cn("text-xs px-2 py-0", status.class)}
+              >
+                {status.label}
+              </Badge>
+
+              {/* Categories */}
+              {task.categories?.map((cat) => (
+                <Badge
+                  key={cat.id}
+                  className="text-xs px-2 py-0 text-white border-0"
+                  style={{ background: cat.color + "cc" }}
+                >
+                  {cat.name}
+                </Badge>
+              ))}
+
+              {/* Due date */}
+              {task.dueDate && (
+                <span
+                  className={cn(
+                    "flex items-center gap-1 text-xs ml-auto",
+                    isOverdue
+                      ? "text-rose-400 font-medium"
+                      : "text-muted-foreground",
+                  )}
+                >
+                  <Calendar className="h-3 w-3" />
+                  {isOverdue ? "Overdue · " : ""}
+                  {format(new Date(task.dueDate), "MMM d")}
+                </span>
+              )}
+            </div>
           </div>
         </div>
-
-        {/* Actions */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
-            >
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-40">
-            <DropdownMenuItem onClick={() => setShowEdit(true)}>
-              <Pencil className="mr-2 h-3.5 w-3.5" />
-              Edit task
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => setShowDelete(true)}
-              className="text-destructive focus:text-destructive focus:bg-destructive/10"
-            >
-              <Trash2 className="mr-2 h-3.5 w-3.5" />
-              Delete task
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      {/* Edit Dialog */}
-      <Dialog open={showEdit} onOpenChange={setShowEdit}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Edit Task</DialogTitle>
-            <DialogDescription>
-              Update the details of your task.
-            </DialogDescription>
-          </DialogHeader>
-          <TaskForm task={task} onSuccess={() => setShowEdit(false)} />
-        </DialogContent>
-      </Dialog>
-
-      {/* Delete Confirm Dialog */}
-      <Dialog open={showDelete} onOpenChange={setShowDelete}>
-        <DialogContent className="sm:max-w-sm">
-          <DialogHeader>
-            <DialogTitle>Delete Task</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete{" "}
-              <span className="font-medium text-foreground">{task.title}</span>?
-              This action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="gap-2 sm:gap-0">
-            <Button
-              variant="outline"
-              onClick={() => setShowDelete(false)}
-              disabled={isDeleting}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() =>
-                deleteTask(task.id, { onSuccess: () => setShowDelete(false) })
-              }
-              disabled={isDeleting}
-            >
-              {isDeleting ? "Deleting..." : "Delete task"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
+      </CardContent>
+    </Card>
   );
-}
+});

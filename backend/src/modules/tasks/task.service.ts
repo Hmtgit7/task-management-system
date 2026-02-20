@@ -1,77 +1,104 @@
 // src/modules/tasks/task.service.ts
 import { prisma } from "@config/database";
+import { Prisma } from "@prisma/client";
 import { ApiError } from "@utils/ApiError";
+import { subDays, startOfDay, format } from "date-fns";
 import type {
   CreateTaskInput,
   GetTasksQuery,
   UpdateTaskInput,
 } from "./task.schema";
 
-// Helper: convert "YYYY-MM-DD" → full ISO DateTime for Prisma
 const toISODate = (date?: string): Date | undefined => {
   if (!date || date.trim() === "") return undefined;
   const d = new Date(date);
-  // If date is invalid, return undefined rather than crashing
   return isNaN(d.getTime()) ? undefined : d;
 };
 
+// Priority sort order for custom ordering
+const PRIORITY_ORDER: Record<string, number> = {
+  URGENT: 0,
+  HIGH: 1,
+  MEDIUM: 2,
+  LOW: 3,
+};
+
 export const createTask = async (userId: string, input: CreateTaskInput) => {
-  const task = await prisma.task.create({
+  return prisma.task.create({
     data: {
       title: input.title,
       description: input.description,
       priority: input.priority,
       dueDate: toISODate(input.dueDate),
+      status: input.status,
       userId,
+      ...(input.categoryIds?.length && {
+        categories: { connect: input.categoryIds.map((id) => ({ id })) },
+      }),
     },
+    include: { categories: true },
   });
-  return task;
 };
 
 export const getTasks = async (userId: string, query: GetTasksQuery) => {
-  const { page, limit, status, search } = query;
+  const {
+    page,
+    limit,
+    status,
+    priority,
+    sort = "createdAt",
+    direction = "desc",
+    search,
+    category,
+  } = query;
+
   const skip = (page - 1) * limit;
+  const where: Prisma.TaskWhereInput = { userId };
 
-  const where: any = { userId };
+  if (status) where.status = status;
+  if (priority) where.priority = priority;
+  if (search) where.title = { contains: search, mode: "insensitive" };
+  if (category) where.categories = { some: { id: category } };
 
-  if (status) {
-    where.status = status;
-  }
-  if (search) {
-    where.title = {
-      contains: search,
-      mode: "insensitive",
-    };
-  }
+  // priority sort needs in-memory sort (not a DB column order)
+  const dbOrderBy =
+    sort === "priority"
+      ? { createdAt: "desc" as const }
+      : { [sort]: direction as "asc" | "desc" };
 
   const [tasks, total] = await Promise.all([
     prisma.task.findMany({
       where,
-      orderBy: { createdAt: "desc" },
+      orderBy: dbOrderBy,
       skip,
       take: limit,
+      include: { categories: true },
     }),
     prisma.task.count({ where }),
   ]);
 
+  // In-memory priority sort
+  const sorted =
+    sort === "priority"
+      ? [...tasks].sort((a, b) =>
+          direction === "asc"
+            ? PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority]
+            : PRIORITY_ORDER[b.priority] - PRIORITY_ORDER[a.priority],
+        )
+      : tasks;
+
   return {
-    tasks,
-    pagination: {
-      page,
-      limit,
-      total,
-      pages: Math.ceil(total / limit),
-    },
+    tasks: sorted,
+    pagination: { page, limit, total, pages: Math.ceil(total / limit) },
   };
 };
 
 export const getTask = async (userId: string, id: string) => {
   const task = await prisma.task.findFirst({
     where: { id, userId },
+    include: { categories: true },
   });
-  if (!task) {
-    throw new ApiError(404, "Task not found");
-  }
+  if (!task) throw new ApiError(404, "Task not found");
   return task;
 };
 
@@ -80,56 +107,117 @@ export const updateTask = async (
   id: string,
   input: UpdateTaskInput,
 ) => {
-  const task = await prisma.task.findFirst({
-    where: { id, userId },
-  });
-  if (!task) {
-    throw new ApiError(404, "Task not found");
+  const task = await prisma.task.findFirst({ where: { id, userId } });
+  if (!task) throw new ApiError(404, "Task not found");
+
+  const data: Prisma.TaskUpdateInput = {};
+  if (input.title !== undefined) data.title = input.title;
+  if (input.description !== undefined) data.description = input.description;
+  if (input.priority !== undefined) data.priority = input.priority;
+  if (input.status !== undefined) data.status = input.status;
+  if (input.dueDate !== undefined) data.dueDate = toISODate(input.dueDate);
+  if (input.categoryIds !== undefined) {
+    data.categories = {
+      set: [],
+      connect: input.categoryIds.map((cid) => ({ id: cid })),
+    };
   }
 
-  const updated = await prisma.task.update({
+  return prisma.task.update({
     where: { id },
-    data: {
-      ...(input.title !== undefined && { title: input.title }),
-      ...(input.description !== undefined && {
-        description: input.description,
-      }),
-      ...(input.priority !== undefined && { priority: input.priority }),
-      ...(input.status !== undefined && { status: input.status }),
-      // Always process dueDate — even empty string (to clear it)
-      dueDate:
-        input.dueDate !== undefined ? toISODate(input.dueDate) : undefined,
-    },
+    data,
+    include: { categories: true },
   });
-  return updated;
 };
 
 export const deleteTask = async (userId: string, id: string) => {
-  const task = await prisma.task.findFirst({
-    where: { id, userId },
-  });
-  if (!task) {
-    throw new ApiError(404, "Task not found");
-  }
-
-  await prisma.task.delete({
-    where: { id },
-  });
+  const task = await prisma.task.findFirst({ where: { id, userId } });
+  if (!task) throw new ApiError(404, "Task not found");
+  await prisma.task.delete({ where: { id } });
 };
 
 export const toggleTask = async (userId: string, id: string) => {
-  const task = await prisma.task.findFirst({
-    where: { id, userId },
-  });
-  if (!task) {
-    throw new ApiError(404, "Task not found");
-  }
-
-  const newStatus = task.status === "COMPLETED" ? "PENDING" : "COMPLETED";
-
-  const updated = await prisma.task.update({
+  const task = await prisma.task.findFirst({ where: { id, userId } });
+  if (!task) throw new ApiError(404, "Task not found");
+  return prisma.task.update({
     where: { id },
-    data: { status: newStatus },
+    data: {
+      status: task.status === "COMPLETED" ? "PENDING" : "COMPLETED",
+    },
+    include: { categories: true },
   });
-  return updated;
+};
+
+// NEW — Dashboard analytics
+export const getAnalytics = async (userId: string) => {
+  const now = new Date();
+  const sevenDaysAgo = subDays(now, 6);
+
+  const [allTasks, last7Days] = await Promise.all([
+    prisma.task.findMany({
+      where: { userId },
+      select: {
+        status: true,
+        priority: true,
+        dueDate: true,
+        createdAt: true,
+      },
+    }),
+    prisma.task.findMany({
+      where: { userId, createdAt: { gte: startOfDay(sevenDaysAgo) } },
+      select: { createdAt: true, status: true },
+    }),
+  ]);
+
+  // Status breakdown
+  const statusBreakdown = {
+    PENDING: allTasks.filter((t) => t.status === "PENDING").length,
+    IN_PROGRESS: allTasks.filter((t) => t.status === "IN_PROGRESS").length,
+    COMPLETED: allTasks.filter((t) => t.status === "COMPLETED").length,
+  };
+
+  // Priority breakdown
+  const priorityBreakdown = {
+    LOW: allTasks.filter((t) => t.priority === "LOW").length,
+    MEDIUM: allTasks.filter((t) => t.priority === "MEDIUM").length,
+    HIGH: allTasks.filter((t) => t.priority === "HIGH").length,
+    URGENT: allTasks.filter((t) => t.priority === "URGENT").length,
+  };
+
+  // Daily tasks for last 7 days
+  const dailyMap: Record<string, { created: number; completed: number }> = {};
+  for (let i = 6; i >= 0; i--) {
+    const day = format(subDays(now, i), "EEE");
+    dailyMap[day] = { created: 0, completed: 0 };
+  }
+  last7Days.forEach((t) => {
+    const day = format(new Date(t.createdAt), "EEE");
+    if (dailyMap[day]) {
+      dailyMap[day].created += 1;
+      if (t.status === "COMPLETED") dailyMap[day].completed += 1;
+    }
+  });
+  const daily = Object.entries(dailyMap).map(([day, v]) => ({
+    day,
+    ...v,
+  }));
+
+  // Overdue count
+  const overdue = allTasks.filter(
+    (t) => t.dueDate && new Date(t.dueDate) < now && t.status !== "COMPLETED",
+  ).length;
+
+  // Completion rate
+  const completionRate = allTasks.length
+    ? Math.round((statusBreakdown.COMPLETED / allTasks.length) * 100)
+    : 0;
+
+  return {
+    total: allTasks.length,
+    statusBreakdown,
+    priorityBreakdown,
+    daily,
+    overdue,
+    completionRate,
+  };
 };

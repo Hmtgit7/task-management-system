@@ -14,12 +14,14 @@ import {
   getTasksHandler,
   toggleTaskHandler,
   updateTaskHandler,
+  getAnalyticsHandler,
 } from "./task.controller";
 
 export const taskRouter = Router();
 
 taskRouter.use(authenticate);
 
+taskRouter.get("/analytics", getAnalyticsHandler); // NEW
 taskRouter.get("/", validate(getTasksQuerySchema, "query"), getTasksHandler);
 taskRouter.post("/", validate(createTaskSchema), createTaskHandler);
 taskRouter.get("/:id", getTaskHandler);

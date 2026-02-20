@@ -4,6 +4,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import type { AxiosError } from "axios";
 import { loginApi, logoutApi, registerApi } from "@/lib/api/auth.api";
 import { useAuthStore } from "@/store/auth-store";
 
@@ -23,7 +24,7 @@ export function useLogin() {
         router.push("/dashboard");
       }, 100);
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(
         error?.response?.data?.message ||
           "Invalid credentials. Please try again.",
@@ -48,7 +49,7 @@ export function useRegister() {
         router.push("/dashboard");
       }, 100);
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(
         error?.response?.data?.message ||
           "Registration failed. Please try again.",
