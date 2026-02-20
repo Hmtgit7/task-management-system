@@ -1,0 +1,38 @@
+{
+  "name": "task-management-system",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Task Management System - Monorepo",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "prepare": "husky",
+    "commit": "git-cz",
+    "format": "prettier --write \"**/*.{js,ts,tsx,jsx,json,css,md,yml}\" --ignore-path .prettierignore",
+    "format:check": "prettier --check \"**/*.{js,ts,tsx,jsx,json,css,md,yml}\" --ignore-path .prettierignore"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
+    "commitizen": "^4.3.1",
+    "cz-git": "^1.11.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.1",
+    "prettier": "^3.5.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-git"
+    }
+  },
+  "lint-staged": {
+    "**/*.{js,ts,tsx,jsx}": [
+      "prettier --write"
+    ],
+    "**/*.{json,css,scss,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  }
+}
