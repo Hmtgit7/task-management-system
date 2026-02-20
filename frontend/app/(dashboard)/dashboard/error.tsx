@@ -1,9 +1,8 @@
-// app/(dashboard)/dashboard/error.tsx
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { AlertTriangle, RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useEffect } from 'react';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function DashboardError({
   error,

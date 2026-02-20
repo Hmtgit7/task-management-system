@@ -1,11 +1,10 @@
-// app/(marketing)/_components/landing-footer.tsx
-import Link from "next/link";
-import { CheckSquare, Github, Twitter } from "lucide-react";
+import Link from 'next/link';
+import { CheckSquare, Github, Twitter } from 'lucide-react';
 
 const links = {
-  Product: ["Features", "Dashboard", "Changelog"],
-  Company: ["About", "Blog", "Careers"],
-  Legal: ["Privacy", "Terms", "Cookies"],
+  Product: ['Features', 'Dashboard', 'Changelog'],
+  Company: ['About', 'Blog', 'Careers'],
+  Legal: ['Privacy', 'Terms', 'Cookies'],
 };
 
 export function LandingFooter() {
@@ -63,7 +62,7 @@ export function LandingFooter() {
         </div>
 
         {/* Bottom */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-8 border-t border-border dark:border-white/[0.06]">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-8 border-t border-border dark:border-white/[0.06]">
           <p className="text-xs text-foreground/20 dark:text-foreground/20">
             © 2026 TaskFlow. All rights reserved.
           </p>

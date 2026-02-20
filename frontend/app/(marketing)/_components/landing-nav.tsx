@@ -1,18 +1,17 @@
-// app/(marketing)/_components/landing-nav.tsx
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { CheckSquare, Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/layout/theme-toggle";
-import { cn } from "@/lib/utils";
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CheckSquare, Menu, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/layout/theme-toggle';
+import { cn } from '@/lib/utils';
 
 const navLinks = [
-  { href: "#features", label: "Features" },
-  { href: "#how-it-works", label: "How it works" },
-  { href: "#faq", label: "FAQ" },
+  { href: '#features', label: 'Features' },
+  { href: '#how-it-works', label: 'How it works' },
+  { href: '#faq', label: 'FAQ' },
 ];
 
 export function LandingNav() {
@@ -21,17 +20,17 @@ export function LandingNav() {
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handler, { passive: true });
-    return () => window.removeEventListener("scroll", handler);
+    window.addEventListener('scroll', handler, { passive: true });
+    return () => window.removeEventListener('scroll', handler);
   }, []);
 
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
         scrolled
-          ? "bg-background/90 dark:bg-[#080810]/90 backdrop-blur-xl border-b border-border dark:border-white/5 py-3"
-          : "py-5",
+          ? 'bg-background/90 dark:bg-[#080810]/90 backdrop-blur-xl border-b border-border dark:border-white/5 py-3'
+          : 'py-5'
       )}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
@@ -86,11 +85,7 @@ export function LandingNav() {
           className="md:hidden text-foreground/70 dark:text-white/70 hover:text-foreground dark:hover:text-white p-2"
           onClick={() => setMobileOpen((v) => !v)}
         >
-          {mobileOpen ? (
-            <X className="h-5 w-5" />
-          ) : (
-            <Menu className="h-5 w-5" />
-          )}
+          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </nav>
 
@@ -99,7 +94,7 @@ export function LandingNav() {
         {mobileOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
+            animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden bg-background/95 dark:bg-[#080810]/95 backdrop-blur-xl border-b border-border dark:border-white/5"
           >

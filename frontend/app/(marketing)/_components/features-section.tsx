@@ -1,77 +1,69 @@
-// app/(marketing)/_components/features-section.tsx
-"use client";
+'use client';
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import {
-  LayoutDashboard,
-  Tags,
-  Bell,
-  BarChart3,
-  Shield,
-  Zap,
-} from "lucide-react";
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
+import { LayoutDashboard, Tags, Bell, BarChart3, Shield, Zap } from 'lucide-react';
 
 const features = [
   {
     icon: LayoutDashboard,
-    title: "Intuitive Dashboard",
+    title: 'Intuitive Dashboard',
     description:
       "Get a bird's-eye view of all your tasks, deadlines, and progress in one clean interface.",
-    gradient: "from-fuchsia-500/20 to-violet-500/20",
-    iconColor: "text-fuchsia-400",
-    border: "hover:border-fuchsia-500/30",
+    gradient: 'from-fuchsia-500/20 to-violet-500/20',
+    iconColor: 'text-fuchsia-400',
+    border: 'hover:border-fuchsia-500/30',
   },
   {
     icon: Tags,
-    title: "Smart Categories",
+    title: 'Smart Categories',
     description:
-      "Organize tasks with color-coded categories and tags. Filter by Work, Personal, Health, and more.",
-    gradient: "from-violet-500/20 to-blue-500/20",
-    iconColor: "text-violet-400",
-    border: "hover:border-violet-500/30",
+      'Organize tasks with color-coded categories and tags. Filter by Work, Personal, Health, and more.',
+    gradient: 'from-violet-500/20 to-blue-500/20',
+    iconColor: 'text-violet-400',
+    border: 'hover:border-violet-500/30',
   },
   {
     icon: BarChart3,
-    title: "Analytics & Reports",
+    title: 'Analytics & Reports',
     description:
-      "Track completion rates, spot bottlenecks, and visualize your productivity trends over time.",
-    gradient: "from-cyan-500/20 to-blue-500/20",
-    iconColor: "text-cyan-400",
-    border: "hover:border-cyan-500/30",
+      'Track completion rates, spot bottlenecks, and visualize your productivity trends over time.',
+    gradient: 'from-cyan-500/20 to-blue-500/20',
+    iconColor: 'text-cyan-400',
+    border: 'hover:border-cyan-500/30',
   },
   {
     icon: Bell,
-    title: "Deadline Tracking",
+    title: 'Deadline Tracking',
     description:
-      "Never miss a deadline. Get smart alerts for overdue and upcoming tasks automatically.",
-    gradient: "from-orange-500/20 to-red-500/20",
-    iconColor: "text-orange-400",
-    border: "hover:border-orange-500/30",
+      'Never miss a deadline. Get smart alerts for overdue and upcoming tasks automatically.',
+    gradient: 'from-orange-500/20 to-red-500/20',
+    iconColor: 'text-orange-400',
+    border: 'hover:border-orange-500/30',
   },
   {
     icon: Zap,
-    title: "Lightning Fast",
+    title: 'Lightning Fast',
     description:
-      "Optimistic updates, real-time sync, and instant search — everything responds instantly.",
-    gradient: "from-yellow-500/20 to-orange-500/20",
-    iconColor: "text-yellow-400",
-    border: "hover:border-yellow-500/30",
+      'Optimistic updates, real-time sync, and instant search — everything responds instantly.',
+    gradient: 'from-yellow-500/20 to-orange-500/20',
+    iconColor: 'text-yellow-400',
+    border: 'hover:border-yellow-500/30',
   },
   {
     icon: Shield,
-    title: "Secure by Default",
+    title: 'Secure by Default',
     description:
-      "JWT auth, encrypted tokens, rate limiting, and per-user data isolation out of the box.",
-    gradient: "from-emerald-500/20 to-teal-500/20",
-    iconColor: "text-emerald-400",
-    border: "hover:border-emerald-500/30",
+      'JWT auth, encrypted tokens, rate limiting, and per-user data isolation out of the box.',
+    gradient: 'from-emerald-500/20 to-teal-500/20',
+    iconColor: 'text-emerald-400',
+    border: 'hover:border-emerald-500/30',
   },
 ];
 
 export function FeaturesSection() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const inView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
     <section id="features" ref={ref} className="py-24 px-4 sm:px-6">
@@ -87,8 +79,7 @@ export function FeaturesSection() {
             Everything you need
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-            Powerful Features For{" "}
-            <span className="text-gradient">Seamless Productivity</span>
+            Powerful Features For <span className="text-gradient">Seamless Productivity</span>
           </h2>
           <p className="text-foreground/40 dark:text-white/40 max-w-xl mx-auto text-sm sm:text-base">
             Work smarter with tools that keep tasks clear and progress visible.

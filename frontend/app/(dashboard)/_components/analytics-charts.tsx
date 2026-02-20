@@ -1,8 +1,7 @@
-// app/(dashboard)/dashboard/_components/analytics-charts.tsx
-"use client";
+'use client';
 
-import { useMemo } from "react";
-import { useTheme } from "next-themes";
+import { useMemo } from 'react';
+import { useTheme } from 'next-themes';
 import {
   BarChart,
   Bar,
@@ -13,11 +12,11 @@ import {
   Cell,
   PieChart,
   Pie,
-} from "recharts";
-import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import type { Analytics } from "@/lib/api/tasks.api";
+} from 'recharts';
+import { motion } from 'framer-motion';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import type { Analytics } from '@/lib/api/tasks.api';
 
 // Custom tooltip
 interface BarTooltipPayload {
@@ -73,27 +72,27 @@ export function AnalyticsCharts({
   loading: boolean;
 }) {
   const { resolvedTheme } = useTheme();
-  const tickColor = resolvedTheme === "dark" ? "#94a3b8" : "#64748b";
+  const tickColor = resolvedTheme === 'dark' ? '#94a3b8' : '#64748b';
 
   const statusData = useMemo(
     () => [
       {
-        name: "Pending",
+        name: 'Pending',
         value: analytics?.statusBreakdown.PENDING ?? 0,
-        fill: "#818cf8",
+        fill: '#818cf8',
       },
       {
-        name: "In Progress",
+        name: 'In Progress',
         value: analytics?.statusBreakdown.IN_PROGRESS ?? 0,
-        fill: "#f472b6",
+        fill: '#f472b6',
       },
       {
-        name: "Completed",
+        name: 'Completed',
         value: analytics?.statusBreakdown.COMPLETED ?? 0,
-        fill: "#34d399",
+        fill: '#34d399',
       },
     ],
-    [analytics],
+    [analytics]
   );
 
   if (loading) {
@@ -115,9 +114,7 @@ export function AnalyticsCharts({
       {/* Bar chart — 7-day activity */}
       <Card className="lg:col-span-2 border-border/60">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-semibold">
-            7-Day Activity
-          </CardTitle>
+          <CardTitle className="text-sm font-semibold">7-Day Activity</CardTitle>
         </CardHeader>
         <CardContent className="pt-0 pr-4">
           <ResponsiveContainer width="100%" height={200}>
@@ -132,18 +129,11 @@ export function AnalyticsCharts({
                 axisLine={false}
                 tickLine={false}
               />
-              <YAxis
-                tick={{ fontSize: 10, fill: tickColor }}
-                axisLine={false}
-                tickLine={false}
-              />
+              <YAxis tick={{ fontSize: 10, fill: tickColor }} axisLine={false} tickLine={false} />
               <Tooltip
                 content={<CustomBarTooltip />}
                 cursor={{
-                  fill:
-                    resolvedTheme === "dark"
-                      ? "rgba(255,255,255,0.06)"
-                      : "rgba(0,0,0,0.04)",
+                  fill: resolvedTheme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)',
                   radius: 6,
                 }}
               />
@@ -167,14 +157,11 @@ export function AnalyticsCharts({
           {/* Legend */}
           <div className="flex items-center gap-4 mt-2 px-2">
             {[
-              { color: "#8b5cf6", label: "Created" },
-              { color: "#34d399", label: "Completed" },
+              { color: '#8b5cf6', label: 'Created' },
+              { color: '#34d399', label: 'Completed' },
             ].map((l) => (
               <div key={l.label} className="flex items-center gap-1.5">
-                <div
-                  className="h-2 w-2 rounded-full"
-                  style={{ background: l.color }}
-                />
+                <div className="h-2 w-2 rounded-full" style={{ background: l.color }} />
                 <span className="text-xs text-muted-foreground">{l.label}</span>
               </div>
             ))}
@@ -220,15 +207,9 @@ export function AnalyticsCharts({
           {/* Legend */}
           <div className="w-full space-y-2 mt-2">
             {statusData.map((s) => (
-              <div
-                key={s.name}
-                className="flex items-center justify-between text-xs"
-              >
+              <div key={s.name} className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
-                  <div
-                    className="h-2.5 w-2.5 rounded-full"
-                    style={{ background: s.fill }}
-                  />
+                  <div className="h-2.5 w-2.5 rounded-full" style={{ background: s.fill }} />
                   <span className="text-muted-foreground">{s.name}</span>
                 </div>
                 <span className="font-semibold text-foreground">{s.value}</span>

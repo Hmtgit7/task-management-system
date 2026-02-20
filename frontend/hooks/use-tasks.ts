@@ -1,25 +1,19 @@
-// hooks/use-tasks.ts
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  useInfiniteQuery,
-} from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import {
   tasksApi,
   categoriesApi,
   type GetTasksParams,
   type Task,
   type TasksResponse,
-} from "@/lib/api/tasks.api";
-import { toast } from "sonner";
+} from '@/lib/api/tasks.api';
+import { toast } from 'sonner';
 
 export const TASK_KEYS = {
-  all: ["tasks"] as const,
-  lists: () => [...TASK_KEYS.all, "list"] as const,
+  all: ['tasks'] as const,
+  lists: () => [...TASK_KEYS.all, 'list'] as const,
   list: (params: GetTasksParams) => [...TASK_KEYS.lists(), params] as const,
-  analytics: () => [...TASK_KEYS.all, "analytics"] as const,
-  categories: () => ["categories"] as const,
+  analytics: () => [...TASK_KEYS.all, 'analytics'] as const,
+  categories: () => ['categories'] as const,
 };
 
 // ── Paginated task list ──
@@ -33,13 +27,11 @@ export function useTasks(params: GetTasksParams = {}) {
 }
 
 // ── Infinite scroll variant (Phase 1 pagination UX) ──
-export function useInfiniteTasks(params: Omit<GetTasksParams, "page"> = {}) {
+export function useInfiniteTasks(params: Omit<GetTasksParams, 'page'> = {}) {
   return useInfiniteQuery({
-    queryKey: [...TASK_KEYS.lists(), "infinite", params],
+    queryKey: [...TASK_KEYS.lists(), 'infinite', params],
     queryFn: ({ pageParam = 1 }) =>
-      tasksApi
-        .getAll({ ...params, page: pageParam, limit: 10 })
-        .then((r) => r.data.data),
+      tasksApi.getAll({ ...params, page: pageParam, limit: 10 }).then((r) => r.data.data),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       const { page, pages } = lastPage.pagination;
@@ -74,9 +66,9 @@ export function useCreateTask() {
     mutationFn: tasksApi.create,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: TASK_KEYS.all });
-      toast.success("Task created!");
+      toast.success('Task created!');
     },
-    onError: () => toast.error("Failed to create task"),
+    onError: () => toast.error('Failed to create task'),
   });
 }
 
@@ -87,9 +79,9 @@ export function useUpdateTask() {
       tasksApi.update(id, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: TASK_KEYS.all });
-      toast.success("Task updated!");
+      toast.success('Task updated!');
     },
-    onError: () => toast.error("Failed to update task"),
+    onError: () => toast.error('Failed to update task'),
   });
 }
 
@@ -99,9 +91,9 @@ export function useDeleteTask() {
     mutationFn: tasksApi.delete,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: TASK_KEYS.all });
-      toast.success("Task deleted");
+      toast.success('Task deleted');
     },
-    onError: () => toast.error("Failed to delete task"),
+    onError: () => toast.error('Failed to delete task'),
   });
 }
 
@@ -114,7 +106,7 @@ export function useToggleTask() {
       await qc.cancelQueries({ queryKey: TASK_KEYS.lists() });
       const prev = qc.getQueriesData({ queryKey: TASK_KEYS.lists() });
       qc.setQueriesData({ queryKey: TASK_KEYS.lists() }, (old: unknown) => {
-        if (!old || typeof old !== "object" || !("tasks" in old)) return old;
+        if (!old || typeof old !== 'object' || !('tasks' in old)) return old;
         const typedOld = old as TasksResponse;
         return {
           ...typedOld,
@@ -122,9 +114,9 @@ export function useToggleTask() {
             t.id === taskId
               ? {
                   ...t,
-                  status: t.status === "COMPLETED" ? "PENDING" : "COMPLETED",
+                  status: t.status === 'COMPLETED' ? 'PENDING' : 'COMPLETED',
                 }
-              : t,
+              : t
           ),
         };
       });
@@ -134,7 +126,7 @@ export function useToggleTask() {
       if (ctx?.prev) {
         ctx.prev.forEach(([key, data]) => qc.setQueryData(key, data));
       }
-      toast.error("Failed to update task");
+      toast.error('Failed to update task');
     },
     onSettled: () => qc.invalidateQueries({ queryKey: TASK_KEYS.all }),
   });
@@ -146,8 +138,8 @@ export function useCreateCategory() {
     mutationFn: categoriesApi.create,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: TASK_KEYS.categories() });
-      toast.success("Category created!");
+      toast.success('Category created!');
     },
-    onError: () => toast.error("Failed to create category"),
+    onError: () => toast.error('Failed to create category'),
   });
 }

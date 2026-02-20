@@ -1,18 +1,17 @@
-// app/(dashboard)/dashboard/_components/task-filters.tsx
-"use client";
+'use client';
 
-import { Search, SlidersHorizontal, X } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Search, SlidersHorizontal, X } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import type { Category, GetTasksParams } from "@/lib/api/tasks.api";
+} from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import type { Category, GetTasksParams } from '@/lib/api/tasks.api';
 
 interface TaskFiltersProps {
   search: string;
@@ -23,22 +22,22 @@ interface TaskFiltersProps {
 }
 
 const STATUS_OPTIONS = [
-  { value: "PENDING", label: "Pending" },
-  { value: "IN_PROGRESS", label: "In Progress" },
-  { value: "COMPLETED", label: "Completed" },
+  { value: 'PENDING', label: 'Pending' },
+  { value: 'IN_PROGRESS', label: 'In Progress' },
+  { value: 'COMPLETED', label: 'Completed' },
 ];
 
 const PRIORITY_OPTIONS = [
-  { value: "LOW", label: "Low" },
-  { value: "MEDIUM", label: "Medium" },
-  { value: "HIGH", label: "High" },
-  { value: "URGENT", label: "Urgent" },
+  { value: 'LOW', label: 'Low' },
+  { value: 'MEDIUM', label: 'Medium' },
+  { value: 'HIGH', label: 'High' },
+  { value: 'URGENT', label: 'Urgent' },
 ];
 
 const SORT_OPTIONS = [
-  { value: "createdAt", label: "Date Created" },
-  { value: "dueDate", label: "Due Date" },
-  { value: "priority", label: "Priority" },
+  { value: 'createdAt', label: 'Date Created' },
+  { value: 'dueDate', label: 'Due Date' },
+  { value: 'priority', label: 'Priority' },
 ];
 
 export function TaskFilters({
@@ -48,17 +47,15 @@ export function TaskFilters({
   onFilterChange,
   categories,
 }: TaskFiltersProps) {
-  const activeFilterCount = [
-    filters.status,
-    filters.priority,
-    filters.category,
-  ].filter(Boolean).length;
+  const activeFilterCount = [filters.status, filters.priority, filters.category].filter(
+    Boolean
+  ).length;
 
   const clearAll = () => {
-    onFilterChange("status", undefined);
-    onFilterChange("priority", undefined);
-    onFilterChange("category", undefined);
-    onSearchChange("");
+    onFilterChange('status', undefined);
+    onFilterChange('priority', undefined);
+    onFilterChange('category', undefined);
+    onSearchChange('');
   };
 
   return (
@@ -75,7 +72,7 @@ export function TaskFilters({
           />
           {search && (
             <button
-              onClick={() => onSearchChange("")}
+              onClick={() => onSearchChange('')}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
             >
               <X className="h-3.5 w-3.5" />
@@ -85,10 +82,8 @@ export function TaskFilters({
 
         {/* Status */}
         <Select
-          value={filters.status ?? "all"}
-          onValueChange={(v) =>
-            onFilterChange("status", v === "all" ? undefined : v)
-          }
+          value={filters.status ?? 'all'}
+          onValueChange={(v) => onFilterChange('status', v === 'all' ? undefined : v)}
         >
           <SelectTrigger className="w-full sm:w-[148px] h-10 bg-secondary/50 border-border/60">
             <SelectValue placeholder="Status" />
@@ -105,10 +100,8 @@ export function TaskFilters({
 
         {/* Priority */}
         <Select
-          value={filters.priority ?? "all"}
-          onValueChange={(v) =>
-            onFilterChange("priority", v === "all" ? undefined : v)
-          }
+          value={filters.priority ?? 'all'}
+          onValueChange={(v) => onFilterChange('priority', v === 'all' ? undefined : v)}
         >
           <SelectTrigger className="w-full sm:w-[148px] h-10 bg-secondary/50 border-border/60">
             <SelectValue placeholder="Priority" />
@@ -125,8 +118,8 @@ export function TaskFilters({
 
         {/* Sort */}
         <Select
-          value={filters.sort ?? "createdAt"}
-          onValueChange={(v) => onFilterChange("sort", v)}
+          value={filters.sort ?? 'createdAt'}
+          onValueChange={(v) => onFilterChange('sort', v)}
         >
           <SelectTrigger className="w-full sm:w-[148px] h-10 bg-secondary/50 border-border/60">
             <SelectValue placeholder="Sort by" />
@@ -147,11 +140,11 @@ export function TaskFilters({
         <span className="text-xs text-muted-foreground">Categories:</span>
 
         <button
-          onClick={() => onFilterChange("category", undefined)}
+          onClick={() => onFilterChange('category', undefined)}
           className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
             !filters.category
-              ? "bg-primary text-primary-foreground border-primary"
-              : "border-border/60 text-muted-foreground hover:border-border"
+              ? 'bg-primary text-primary-foreground border-primary'
+              : 'border-border/60 text-muted-foreground hover:border-border'
           }`}
         >
           All
@@ -161,26 +154,20 @@ export function TaskFilters({
           <button
             key={cat.id}
             onClick={() =>
-              onFilterChange(
-                "category",
-                filters.category === cat.id ? undefined : cat.id,
-              )
+              onFilterChange('category', filters.category === cat.id ? undefined : cat.id)
             }
             className={`text-xs px-2.5 py-1 rounded-full border transition-colors flex items-center gap-1.5 ${
               filters.category === cat.id
-                ? "border-transparent text-white"
-                : "border-border/60 text-muted-foreground hover:border-border"
+                ? 'border-transparent text-white'
+                : 'border-border/60 text-muted-foreground hover:border-border'
             }`}
             style={
               filters.category === cat.id
-                ? { background: cat.color + "cc", borderColor: cat.color }
+                ? { background: cat.color + 'cc', borderColor: cat.color }
                 : {}
             }
           >
-            <span
-              className="h-2 w-2 rounded-full shrink-0"
-              style={{ background: cat.color }}
-            />
+            <span className="h-2 w-2 rounded-full shrink-0" style={{ background: cat.color }} />
             {cat.name}
           </button>
         ))}

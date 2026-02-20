@@ -1,30 +1,22 @@
-// components/layout/navbar.tsx
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import {
-  CheckSquare,
-  LogOut,
-  User,
-  Menu,
-  X,
-  LayoutDashboard,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "./theme-toggle";
-import { useAuthStore } from "@/store/auth-store";
-import { logoutApi } from "@/lib/api/auth.api";
-import { toast } from "sonner";
+import { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { CheckSquare, LogOut, User, Menu, X, LayoutDashboard } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ThemeToggle } from './theme-toggle';
+import { useAuthStore } from '@/store/auth-store';
+import { logoutApi } from '@/lib/api/auth.api';
+import { toast } from 'sonner';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { AnimatePresence, motion } from "framer-motion";
+} from '@/components/ui/dropdown-menu';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export function Navbar() {
   const router = useRouter();
@@ -36,8 +28,8 @@ export function Navbar() {
       await logoutApi();
     } catch {}
     logout();
-    toast.success("Signed out successfully");
-    router.push("/");
+    toast.success('Signed out successfully');
+    router.push('/');
   };
 
   return (
@@ -58,9 +50,7 @@ export function Navbar() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="gap-2 h-9">
                 <div className="h-6 w-6 rounded-full bg-gradient-to-br from-fuchsia-500 to-violet-600 flex items-center justify-center text-white text-xs font-bold">
-                  {user?.name?.[0]?.toUpperCase() ??
-                    user?.email?.[0]?.toUpperCase() ??
-                    "U"}
+                  {user?.name?.[0]?.toUpperCase() ?? user?.email?.[0]?.toUpperCase() ?? 'U'}
                 </div>
                 <span className="text-sm font-medium max-w-[120px] truncate">
                   {user?.name ?? user?.email}
@@ -68,10 +58,7 @@ export function Navbar() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem
-                disabled
-                className="text-xs text-muted-foreground"
-              >
+              <DropdownMenuItem disabled className="text-xs text-muted-foreground">
                 {user?.email}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -96,11 +83,7 @@ export function Navbar() {
             onClick={() => setMobileOpen((v) => !v)}
             className="p-2 text-muted-foreground hover:text-foreground"
           >
-            {mobileOpen ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
@@ -110,14 +93,14 @@ export function Navbar() {
         {mobileOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
+            animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             className="sm:hidden border-t border-border/40 bg-background/95 backdrop-blur-xl"
           >
             <div className="max-w-7xl mx-auto px-4 py-4 space-y-3">
               <div className="flex items-center gap-3 pb-3 border-b border-border/40">
                 <div className="h-9 w-9 rounded-full bg-gradient-to-br from-fuchsia-500 to-violet-600 flex items-center justify-center text-white font-bold">
-                  {user?.name?.[0]?.toUpperCase() ?? "U"}
+                  {user?.name?.[0]?.toUpperCase() ?? 'U'}
                 </div>
                 <div>
                   <p className="text-sm font-medium">{user?.name}</p>

@@ -1,25 +1,18 @@
-// lib/api.ts
-import axios from "axios";
-import { useAuthStore } from "@/store/auth-store";
+import axios from 'axios';
+import { useAuthStore } from '@/store/auth-store';
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000',
   withCredentials: true,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
 // Routes that should NEVER trigger auto-refresh
-const AUTH_ROUTES = [
-  "/auth/login",
-  "/auth/register",
-  "/auth/refresh",
-  "/auth/logout",
-];
+const AUTH_ROUTES = ['/auth/login', '/auth/register', '/auth/refresh', '/auth/logout'];
 
-const isAuthRoute = (url?: string) =>
-  AUTH_ROUTES.some((route) => url?.includes(route));
+const isAuthRoute = (url?: string) => AUTH_ROUTES.some((route) => url?.includes(route));
 
 // Attach access token
 api.interceptors.request.use((config) => {
@@ -71,7 +64,7 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const res = await api.post("/auth/refresh");
+        const res = await api.post('/auth/refresh');
         const newToken = res.data.data.accessToken;
         useAuthStore.getState().setAccessToken(newToken);
         processQueue(null, newToken);
@@ -80,8 +73,8 @@ api.interceptors.response.use(
       } catch (err) {
         processQueue(err, null);
         useAuthStore.getState().logout();
-        if (typeof window !== "undefined") {
-          window.location.href = "/login";
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
         }
         return Promise.reject(err);
       } finally {
@@ -90,7 +83,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  },
+  }
 );
 
 export default api;

@@ -1,5 +1,4 @@
-// components/tasks/task-skeleton.tsx
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function TaskSkeleton() {
   return (

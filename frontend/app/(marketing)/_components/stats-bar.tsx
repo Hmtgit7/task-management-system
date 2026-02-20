@@ -1,20 +1,19 @@
-// app/(marketing)/_components/stats-bar.tsx
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion } from 'framer-motion';
+import { useInView } from 'framer-motion';
+import { useRef } from 'react';
 
 const stats = [
-  { value: "10K+", label: "Active Users" },
-  { value: "50K+", label: "Tasks Completed" },
-  { value: "99.9%", label: "Uptime SLA" },
-  { value: "4.9★", label: "User Rating" },
+  { value: '10K+', label: 'Active Users' },
+  { value: '50K+', label: 'Tasks Completed' },
+  { value: '99.9%', label: 'Uptime SLA' },
+  { value: '4.9★', label: 'User Rating' },
 ];
 
 export function StatsBar() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
     <section
@@ -31,9 +30,7 @@ export function StatsBar() {
               transition={{ delay: i * 0.1, duration: 0.5 }}
               className="flex flex-col items-center text-center gap-1"
             >
-              <span className="text-3xl font-bold text-gradient">
-                {stat.value}
-              </span>
+              <span className="text-3xl font-bold text-gradient">{stat.value}</span>
               <span className="text-sm text-foreground/40 dark:text-white/40">{stat.label}</span>
             </motion.div>
           ))}

@@ -1,22 +1,17 @@
-// app/(dashboard)/dashboard/page.tsx
-"use client";
+'use client';
 
-import { Suspense, useState, useCallback, useMemo } from "react";
-import { useDebounce } from "use-debounce";
-import {
-  useAnalytics,
-  useInfiniteTasks,
-  useCategories,
-} from "@/hooks/use-tasks";
-import { DashboardHeader } from "../_components/dashboard-header";
-import { StatsRow } from "../_components/stats-row";
-import { AnalyticsCharts } from "../_components/analytics-charts";
-import { OverdueAlert } from "../_components/overdue-alert";
-import { TaskFilters } from "../_components/task-filters";
-import { TaskList } from "../_components/task-list";
-import { TaskFormModal } from "@/components/tasks/task-form-modal";
-import { Skeleton } from "@/components/ui/skeleton";
-import type { GetTasksParams, Task } from "@/lib/api/tasks.api";
+import { Suspense, useState, useCallback, useMemo } from 'react';
+import { useDebounce } from 'use-debounce';
+import { useAnalytics, useInfiniteTasks, useCategories } from '@/hooks/use-tasks';
+import { DashboardHeader } from '../_components/dashboard-header';
+import { StatsRow } from '../_components/stats-row';
+import { AnalyticsCharts } from '../_components/analytics-charts';
+import { OverdueAlert } from '../_components/overdue-alert';
+import { TaskFilters } from '../_components/task-filters';
+import { TaskList } from '../_components/task-list';
+import { TaskFormModal } from '@/components/tasks/task-form-modal';
+import { Skeleton } from '@/components/ui/skeleton';
+import type { GetTasksParams, Task } from '@/lib/api/tasks.api';
 
 export default function DashboardPage() {
   const [showForm, setShowForm] = useState(false);
@@ -24,15 +19,15 @@ export default function DashboardPage() {
 
   // Filter state
   const [filters, setFilters] = useState<GetTasksParams>({
-    sort: "createdAt",
-    direction: "desc",
+    sort: 'createdAt',
+    direction: 'desc',
   });
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebounce(search, 400);
 
   const activeParams = useMemo(
     () => ({ ...filters, search: debouncedSearch || undefined }),
-    [filters, debouncedSearch],
+    [filters, debouncedSearch]
   );
 
   const { data: analytics, isLoading: analyticsLoading } = useAnalytics();
@@ -46,14 +41,14 @@ export default function DashboardPage() {
 
   const { data: categories = [] } = useCategories();
 
-  const tasks = useMemo(
-    () => infiniteData?.pages.flatMap((p) => p.tasks) ?? [],
-    [infiniteData],
-  );
+  const tasks = useMemo(() => infiniteData?.pages.flatMap((p) => p.tasks) ?? [], [infiniteData]);
 
-  const handleFilter = useCallback((key: keyof GetTasksParams, value: GetTasksParams[keyof GetTasksParams]) => {
-    setFilters((prev) => ({ ...prev, [key]: value || undefined }));
-  }, []);
+  const handleFilter = useCallback(
+    (key: keyof GetTasksParams, value: GetTasksParams[keyof GetTasksParams]) => {
+      setFilters((prev) => ({ ...prev, [key]: value || undefined }));
+    },
+    []
+  );
 
   const handleEdit = useCallback((task: Task) => {
     setEditingTask(task);
@@ -80,7 +75,7 @@ export default function DashboardPage() {
         {analytics && analytics.overdue > 0 && (
           <OverdueAlert
             count={analytics.overdue}
-            onView={() => handleFilter("status", "PENDING")}
+            onView={() => handleFilter('status', 'PENDING')}
           />
         )}
 

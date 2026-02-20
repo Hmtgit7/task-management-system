@@ -1,15 +1,14 @@
-// app/(marketing)/_components/cta-section.tsx
-"use client";
+'use client';
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export function CtaSection() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
     <section ref={ref} className="py-24 px-4 sm:px-6">
@@ -33,8 +32,7 @@ export function CtaSection() {
               Ready to get <span className="text-gradient">more done?</span>
             </h2>
             <p className="text-foreground/50 dark:text-white/50 mb-8 max-w-md mx-auto text-sm sm:text-base">
-              Join thousands of users who use TaskFlow to stay organized and
-              ship work faster.
+              Join thousands of users who use TaskFlow to stay organized and ship work faster.
             </p>
             <Link href="/register">
               <Button

@@ -1,12 +1,11 @@
-// lib/api/tasks.api.ts
-import api from "../api";
+import api from '../api';
 
 export interface Task {
   id: string;
   title: string;
   description?: string | null;
-  status: "PENDING" | "IN_PROGRESS" | "COMPLETED";
-  priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+  status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
+  priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
   dueDate?: string | null;
   userId: string;
   createdAt: string;
@@ -36,8 +35,8 @@ export interface GetTasksParams {
   limit?: number;
   status?: string;
   priority?: string;
-  sort?: "createdAt" | "dueDate" | "priority";
-  direction?: "asc" | "desc";
+  sort?: 'createdAt' | 'dueDate' | 'priority';
+  direction?: 'asc' | 'desc';
   search?: string;
   category?: string;
 }
@@ -58,31 +57,28 @@ export interface Analytics {
 
 export const tasksApi = {
   getAll: (params?: GetTasksParams) =>
-    api.get<{ success: true; data: TasksResponse }>("/tasks", { params }),
+    api.get<{ success: true; data: TasksResponse }>('/tasks', { params }),
 
-  getOne: (id: string) =>
-    api.get<{ success: true; data: Task }>(`/tasks/${id}`),
+  getOne: (id: string) => api.get<{ success: true; data: Task }>(`/tasks/${id}`),
 
   create: (data: Partial<Task> & { categoryIds?: string[] }) =>
-    api.post<{ success: true; data: Task }>("/tasks", data),
+    api.post<{ success: true; data: Task }>('/tasks', data),
 
   update: (id: string, data: Partial<Task> & { categoryIds?: string[] }) =>
     api.patch<{ success: true; data: Task }>(`/tasks/${id}`, data),
 
   delete: (id: string) => api.delete(`/tasks/${id}`),
 
-  toggle: (id: string) =>
-    api.patch<{ success: true; data: Task }>(`/tasks/${id}/toggle`),
+  toggle: (id: string) => api.patch<{ success: true; data: Task }>(`/tasks/${id}/toggle`),
 
-  getAnalytics: () =>
-    api.get<{ success: true; data: Analytics }>("/tasks/analytics"),
+  getAnalytics: () => api.get<{ success: true; data: Analytics }>('/tasks/analytics'),
 };
 
 export const categoriesApi = {
-  getAll: () => api.get<{ success: true; data: Category[] }>("/categories"),
+  getAll: () => api.get<{ success: true; data: Category[] }>('/categories'),
 
   create: (data: { name: string; color: string }) =>
-    api.post<{ success: true; data: Category }>("/categories", data),
+    api.post<{ success: true; data: Category }>('/categories', data),
 
   delete: (id: string) => api.delete(`/categories/${id}`),
 };

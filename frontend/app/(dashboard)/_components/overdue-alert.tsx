@@ -1,18 +1,11 @@
-// app/(dashboard)/dashboard/_components/overdue-alert.tsx
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { AlertTriangle, ArrowRight, X } from "lucide-react";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { motion } from 'framer-motion';
+import { AlertTriangle, ArrowRight, X } from 'lucide-react';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 
-export function OverdueAlert({
-  count,
-  onView,
-}: {
-  count: number;
-  onView: () => void;
-}) {
+export function OverdueAlert({ count, onView }: { count: number; onView: () => void }) {
   const [dismissed, setDismissed] = useState(false);
   if (dismissed) return null;
 
@@ -26,8 +19,8 @@ export function OverdueAlert({
       <AlertTriangle className="h-4 w-4 shrink-0" />
       <p className="text-sm flex-1">
         <span className="font-semibold">
-          {count} task{count > 1 ? "s are" : " is"} overdue.
-        </span>{" "}
+          {count} task{count > 1 ? 's are' : ' is'} overdue.
+        </span>{' '}
         <span className="text-rose-400/70">Review them to stay on track.</span>
       </p>
       <Button

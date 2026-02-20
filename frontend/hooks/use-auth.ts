@@ -1,12 +1,11 @@
-// hooks/use-auth.ts
-"use client";
+'use client';
 
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import type { AxiosError } from "axios";
-import { loginApi, logoutApi, registerApi } from "@/lib/api/auth.api";
-import { useAuthStore } from "@/store/auth-store";
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import type { AxiosError } from 'axios';
+import { loginApi, logoutApi, registerApi } from '@/lib/api/auth.api';
+import { useAuthStore } from '@/store/auth-store';
 
 export function useLogin() {
   const { setAuth } = useAuthStore();
@@ -16,19 +15,14 @@ export function useLogin() {
     mutationFn: loginApi,
     onSuccess: (data) => {
       setAuth(data.data.user, data.data.accessToken);
-      toast.success(
-        `Welcome back, ${data.data.user.name || data.data.user.email}!`,
-      );
+      toast.success(`Welcome back, ${data.data.user.name || data.data.user.email}!`);
       // Small delay to ensure cookie is written before proxy.ts checks it
       setTimeout(() => {
-        router.push("/dashboard");
+        router.push('/dashboard');
       }, 100);
     },
     onError: (error: AxiosError<{ message?: string }>) => {
-      toast.error(
-        error?.response?.data?.message ||
-          "Invalid credentials. Please try again.",
-      );
+      toast.error(error?.response?.data?.message || 'Invalid credentials. Please try again.');
     },
   });
 }
@@ -41,19 +35,14 @@ export function useRegister() {
     mutationFn: registerApi,
     onSuccess: (data) => {
       setAuth(data.data.user, data.data.accessToken);
-      toast.success(
-        `Welcome back, ${data.data.user.name || data.data.user.email}!`,
-      );
+      toast.success(`Welcome back, ${data.data.user.name || data.data.user.email}!`);
       // Small delay to ensure cookie is written before proxy.ts checks it
       setTimeout(() => {
-        router.push("/dashboard");
+        router.push('/dashboard');
       }, 100);
     },
     onError: (error: AxiosError<{ message?: string }>) => {
-      toast.error(
-        error?.response?.data?.message ||
-          "Registration failed. Please try again.",
-      );
+      toast.error(error?.response?.data?.message || 'Registration failed. Please try again.');
     },
   });
 }
@@ -66,13 +55,13 @@ export function useLogout() {
     mutationFn: logoutApi,
     onSuccess: () => {
       logout();
-      toast.success("Signed out successfully");
-      router.push("/");
+      toast.success('Signed out successfully');
+      router.push('/');
     },
     onError: () => {
       // Force logout even on API failure
       logout();
-      router.push("/");
+      router.push('/');
     },
   });
 }

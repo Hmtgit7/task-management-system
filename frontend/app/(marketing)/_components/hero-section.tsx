@@ -1,11 +1,10 @@
-// app/(marketing)/_components/hero-section.tsx
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { ArrowRight, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 24 },
@@ -21,19 +20,19 @@ const fadeUp = (delay = 0) => ({
 function KanbanMockup() {
   const columns = [
     {
-      title: "To Do",
-      color: "bg-slate-500/20 border-slate-500/30",
-      tasks: ["Design new landing", "API integration"],
+      title: 'To Do',
+      color: 'bg-slate-500/20 border-slate-500/30',
+      tasks: ['Design new landing', 'API integration'],
     },
     {
-      title: "In Progress",
-      color: "bg-fuchsia-500/20 border-fuchsia-500/30",
-      tasks: ["Dashboard redesign", "Auth flow"],
+      title: 'In Progress',
+      color: 'bg-fuchsia-500/20 border-fuchsia-500/30',
+      tasks: ['Dashboard redesign', 'Auth flow'],
     },
     {
-      title: "Completed",
-      color: "bg-emerald-500/20 border-emerald-500/30",
-      tasks: ["Setup backend", "DB schema"],
+      title: 'Completed',
+      color: 'bg-emerald-500/20 border-emerald-500/30',
+      tasks: ['Setup backend', 'DB schema'],
     },
   ];
 
@@ -41,7 +40,11 @@ function KanbanMockup() {
     <motion.div
       initial={{ opacity: 0, y: 40, scale: 0.96 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.8, delay: 0.4, ease: [0.21, 0.47, 0.32, 0.98] as [number, number, number, number] }}
+      transition={{
+        duration: 0.8,
+        delay: 0.4,
+        ease: [0.21, 0.47, 0.32, 0.98] as [number, number, number, number],
+      }}
       className="relative w-full max-w-2xl mx-auto"
     >
       {/* Glow behind card */}
@@ -60,10 +63,7 @@ function KanbanMockup() {
 
         <div className="grid grid-cols-3 gap-2 sm:gap-3">
           {columns.map((col) => (
-            <div
-              key={col.title}
-              className={`rounded-xl border p-3 ${col.color}`}
-            >
+            <div key={col.title} className={`rounded-xl border p-3 ${col.color}`}>
               <p className="text-xs font-semibold text-foreground/70 dark:text-white/70 mb-2">
                 {col.title}
               </p>
@@ -73,7 +73,9 @@ function KanbanMockup() {
                     key={t}
                     className="bg-foreground/5 dark:bg-white/5 rounded-lg p-2 border border-border dark:border-white/10"
                   >
-                    <p className="text-xs text-foreground/80 dark:text-white/80 leading-tight">{t}</p>
+                    <p className="text-xs text-foreground/80 dark:text-white/80 leading-tight">
+                      {t}
+                    </p>
                     <div className="mt-1.5 flex gap-1">
                       <div className="h-1 w-8 rounded-full bg-fuchsia-500/50" />
                       <div className="h-1 w-5 rounded-full bg-foreground/20 dark:bg-white/20" />
@@ -114,7 +116,7 @@ export function HeroSection() {
           >
             Simplify Work. <span className="text-gradient">Empower Teams.</span>
             <br />
-            Track Tasks{" "}
+            Track Tasks{' '}
             <span className="relative">
               Smarter.
               <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-fuchsia-500 to-violet-500 rounded-full" />
@@ -126,15 +128,12 @@ export function HeroSection() {
             {...fadeUp(0.3)}
             className="text-base sm:text-lg text-foreground/50 dark:text-white/50 max-w-xl leading-relaxed"
           >
-            TaskFlow helps teams organize projects, hit deadlines, and boost
-            productivity — all in one beautifully designed place.
+            TaskFlow helps teams organize projects, hit deadlines, and boost productivity — all in
+            one beautifully designed place.
           </motion.p>
 
           {/* CTAs */}
-          <motion.div
-            {...fadeUp(0.4)}
-            className="flex flex-col sm:flex-row gap-3"
-          >
+          <motion.div {...fadeUp(0.4)} className="flex flex-col sm:flex-row gap-3">
             <Link href="/register">
               <Button
                 size="lg"

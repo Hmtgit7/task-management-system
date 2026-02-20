@@ -1,15 +1,10 @@
-// app/(auth)/layout.tsx
-"use client"; // ← ADD THIS
+'use client';
 
-import Link from "next/link";
-import { CheckSquare } from "lucide-react";
-import { ThemeToggle } from "@/components/layout/theme-toggle";
+import Link from 'next/link';
+import { CheckSquare } from 'lucide-react';
+import { ThemeToggle } from '@/components/layout/theme-toggle';
 
-export default function AuthLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="flex items-center justify-between px-6 py-4 border-b border-border/40">
@@ -22,9 +17,7 @@ export default function AuthLayout({
         <ThemeToggle />
       </header>
 
-      <main className="flex flex-1 items-center justify-center p-4">
-        {children}
-      </main>
+      <main className="flex flex-1 items-center justify-center p-4">{children}</main>
 
       <footer className="py-4 text-center text-xs text-muted-foreground border-t border-border/40">
         © 2026 TaskFlow. All rights reserved.

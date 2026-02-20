@@ -1,16 +1,15 @@
-// app/(auth)/register/page.tsx
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, Loader2, UserPlus, CheckCircle2 } from "lucide-react";
-import { useState } from "react";
-import { registerSchema, type RegisterFormData } from "@/lib/validations/auth";
-import { useRegister } from "@/hooks/use-auth";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Eye, EyeOff, Loader2, UserPlus, CheckCircle2 } from 'lucide-react';
+import { useState } from 'react';
+import { registerSchema, type RegisterFormData } from '@/lib/validations/auth';
+import { useRegister } from '@/hooks/use-auth';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Card,
   CardContent,
@@ -18,9 +17,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
 
 const passwordStrength = (password: string) => {
   let score = 0;
@@ -32,10 +31,10 @@ const passwordStrength = (password: string) => {
 };
 
 const strengthConfig = [
-  { label: "Weak", color: "bg-destructive" },
-  { label: "Fair", color: "bg-orange-500" },
-  { label: "Good", color: "bg-yellow-500" },
-  { label: "Strong", color: "bg-green-500" },
+  { label: 'Weak', color: 'bg-destructive' },
+  { label: 'Fair', color: 'bg-orange-500' },
+  { label: 'Good', color: 'bg-yellow-500' },
+  { label: 'Strong', color: 'bg-green-500' },
 ];
 
 export default function RegisterPage() {
@@ -52,7 +51,7 @@ export default function RegisterPage() {
     resolver: zodResolver(registerSchema),
   });
 
-  const passwordValue = watch("password", "");
+  const passwordValue = watch('password', '');
   const strength = passwordStrength(passwordValue);
   const strengthInfo = strengthConfig[Math.min(strength - 1, 3)];
 
@@ -79,9 +78,7 @@ export default function RegisterPage() {
               <UserPlus className="h-6 w-6" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold text-center">
-            Create your account
-          </CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">Create your account</CardTitle>
           <CardDescription className="text-center">
             Start managing tasks for free — no card required
           </CardDescription>
@@ -92,10 +89,7 @@ export default function RegisterPage() {
             {/* Name */}
             <div className="space-y-1.5">
               <Label htmlFor="name">
-                Full name{" "}
-                <span className="text-muted-foreground text-xs">
-                  (optional)
-                </span>
+                Full name <span className="text-muted-foreground text-xs">(optional)</span>
               </Label>
               <Input
                 id="name"
@@ -104,17 +98,12 @@ export default function RegisterPage() {
                 autoComplete="name"
                 disabled={isPending}
                 className={cn(
-                  "h-11",
-                  errors.name &&
-                    "border-destructive focus-visible:ring-destructive",
+                  'h-11',
+                  errors.name && 'border-destructive focus-visible:ring-destructive'
                 )}
-                {...register("name")}
+                {...register('name')}
               />
-              {errors.name && (
-                <p className="text-xs text-destructive">
-                  {errors.name.message}
-                </p>
-              )}
+              {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
             </div>
 
             {/* Email */}
@@ -127,17 +116,12 @@ export default function RegisterPage() {
                 autoComplete="email"
                 disabled={isPending}
                 className={cn(
-                  "h-11",
-                  errors.email &&
-                    "border-destructive focus-visible:ring-destructive",
+                  'h-11',
+                  errors.email && 'border-destructive focus-visible:ring-destructive'
                 )}
-                {...register("email")}
+                {...register('email')}
               />
-              {errors.email && (
-                <p className="text-xs text-destructive">
-                  {errors.email.message}
-                </p>
-              )}
+              {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
             </div>
 
             {/* Password */}
@@ -146,16 +130,15 @@ export default function RegisterPage() {
               <div className="relative">
                 <Input
                   id="password"
-                  type={showPassword ? "text" : "password"}
+                  type={showPassword ? 'text' : 'password'}
                   placeholder="Min. 8 characters"
                   autoComplete="new-password"
                   disabled={isPending}
                   className={cn(
-                    "h-11 pr-10",
-                    errors.password &&
-                      "border-destructive focus-visible:ring-destructive",
+                    'h-11 pr-10',
+                    errors.password && 'border-destructive focus-visible:ring-destructive'
                   )}
-                  {...register("password")}
+                  {...register('password')}
                 />
                 <button
                   type="button"
@@ -163,11 +146,7 @@ export default function RegisterPage() {
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                   tabIndex={-1}
                 >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
               {/* Password strength indicator */}
@@ -178,29 +157,27 @@ export default function RegisterPage() {
                       <div
                         key={i}
                         className={cn(
-                          "h-1.5 flex-1 rounded-full transition-all duration-300",
-                          i < strength ? strengthInfo?.color : "bg-muted",
+                          'h-1.5 flex-1 rounded-full transition-all duration-300',
+                          i < strength ? strengthInfo?.color : 'bg-muted'
                         )}
                       />
                     ))}
                   </div>
                   <p
                     className={cn(
-                      "text-xs",
-                      strength <= 1 && "text-destructive",
-                      strength === 2 && "text-orange-500",
-                      strength === 3 && "text-yellow-500",
-                      strength === 4 && "text-green-500",
+                      'text-xs',
+                      strength <= 1 && 'text-destructive',
+                      strength === 2 && 'text-orange-500',
+                      strength === 3 && 'text-yellow-500',
+                      strength === 4 && 'text-green-500'
                     )}
                   >
-                    {strengthInfo?.label || "Too short"} password
+                    {strengthInfo?.label || 'Too short'} password
                   </p>
                 </div>
               )}
               {errors.password && (
-                <p className="text-xs text-destructive">
-                  {errors.password.message}
-                </p>
+                <p className="text-xs text-destructive">{errors.password.message}</p>
               )}
             </div>
 
@@ -210,16 +187,15 @@ export default function RegisterPage() {
               <div className="relative">
                 <Input
                   id="confirmPassword"
-                  type={showConfirm ? "text" : "password"}
+                  type={showConfirm ? 'text' : 'password'}
                   placeholder="Repeat your password"
                   autoComplete="new-password"
                   disabled={isPending}
                   className={cn(
-                    "h-11 pr-10",
-                    errors.confirmPassword &&
-                      "border-destructive focus-visible:ring-destructive",
+                    'h-11 pr-10',
+                    errors.confirmPassword && 'border-destructive focus-visible:ring-destructive'
                   )}
-                  {...register("confirmPassword")}
+                  {...register('confirmPassword')}
                 />
                 <button
                   type="button"
@@ -227,33 +203,23 @@ export default function RegisterPage() {
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                   tabIndex={-1}
                 >
-                  {showConfirm ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
+                  {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
               {errors.confirmPassword && (
-                <p className="text-xs text-destructive">
-                  {errors.confirmPassword.message}
-                </p>
+                <p className="text-xs text-destructive">{errors.confirmPassword.message}</p>
               )}
             </div>
 
             {/* Submit */}
-            <Button
-              type="submit"
-              className="w-full h-11 mt-2"
-              disabled={isPending}
-            >
+            <Button type="submit" className="w-full h-11 mt-2" disabled={isPending}>
               {isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Creating account...
                 </>
               ) : (
-                "Create account"
+                'Create account'
               )}
             </Button>
           </form>
@@ -263,7 +229,7 @@ export default function RegisterPage() {
           <Separator />
 
           {/* Perks */}
-          <div className="grid grid-cols-2 gap-1.5 w-full">
+          {/* <div className="grid grid-cols-2 gap-1.5 w-full">
             {[
               "Free forever",
               "No credit card",
@@ -278,12 +244,12 @@ export default function RegisterPage() {
                 {perk}
               </div>
             ))}
-          </div>
+          </div> */}
 
           <Separator />
 
           <p className="text-sm text-muted-foreground text-center">
-            Already have an account?{" "}
+            Already have an account?{' '}
             <Link
               href="/login"
               className="font-semibold text-primary hover:underline underline-offset-4"

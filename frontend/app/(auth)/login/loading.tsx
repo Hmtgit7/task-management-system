@@ -1,12 +1,5 @@
-// app/(auth)/login/loading.tsx
-// app/(auth)/register/loading.tsx  (same content for both)
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 
 export default function AuthLoading() {
   return (

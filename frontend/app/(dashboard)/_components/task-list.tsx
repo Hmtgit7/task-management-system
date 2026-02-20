@@ -1,13 +1,12 @@
-// app/(dashboard)/dashboard/_components/task-list.tsx
-"use client";
+'use client';
 
-import { useEffect, useRef, useCallback, memo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, ListChecks } from "lucide-react";
-import { TaskCard } from "@/components/tasks/task-card";
-import { Skeleton } from "@/components/ui/skeleton";
-import type { Task, Category } from "@/lib/api/tasks.api";
-import { useDeleteTask, useToggleTask } from "@/hooks/use-tasks";
+import { useEffect, useRef, useCallback, memo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Loader2, ListChecks } from 'lucide-react';
+import { TaskCard } from '@/components/tasks/task-card';
+import { Skeleton } from '@/components/ui/skeleton';
+import type { Task, Category } from '@/lib/api/tasks.api';
+import { useDeleteTask, useToggleTask } from '@/hooks/use-tasks';
 
 interface TaskListProps {
   tasks: Task[];
@@ -29,7 +28,7 @@ function useInfiniteScrollSentinel(callback: () => void, enabled: boolean) {
       (entries) => {
         if (entries[0].isIntersecting) callback();
       },
-      { threshold: 0.1 },
+      { threshold: 0.1 }
     );
     observer.observe(ref.current);
     return () => observer.disconnect();
@@ -39,13 +38,7 @@ function useInfiniteScrollSentinel(callback: () => void, enabled: boolean) {
 }
 
 // Memoized TaskCard row to prevent re-renders
-const TaskRow = memo(function TaskRow({
-  task,
-  onEdit,
-}: {
-  task: Task;
-  onEdit: (t: Task) => void;
-}) {
+const TaskRow = memo(function TaskRow({ task, onEdit }: { task: Task; onEdit: (t: Task) => void }) {
   const { mutate: toggle } = useToggleTask();
   const { mutate: remove } = useDeleteTask();
 
@@ -95,9 +88,7 @@ export function TaskList({
           <ListChecks className="h-8 w-8 text-muted-foreground" />
         </div>
         <p className="font-semibold text-foreground">No tasks yet</p>
-        <p className="text-sm text-muted-foreground mt-1">
-          Create your first task to get started
-        </p>
+        <p className="text-sm text-muted-foreground mt-1">Create your first task to get started</p>
       </div>
     );
   }
@@ -106,9 +97,7 @@ export function TaskList({
     <div className="space-y-3">
       <div className="flex items-center justify-between mb-1">
         <p className="text-sm text-muted-foreground">
-          Showing{" "}
-          <span className="font-medium text-foreground">{tasks.length}</span>{" "}
-          tasks
+          Showing <span className="font-medium text-foreground">{tasks.length}</span> tasks
         </p>
       </div>
 
@@ -129,9 +118,7 @@ export function TaskList({
       )}
 
       {!hasNextPage && tasks.length > 0 && (
-        <p className="text-center text-xs text-muted-foreground py-4">
-          All tasks loaded ✓
-        </p>
+        <p className="text-center text-xs text-muted-foreground py-4">All tasks loaded ✓</p>
       )}
     </div>
   );

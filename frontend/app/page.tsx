@@ -1,4 +1,3 @@
-// // app/page.tsx
 // import Link from "next/link";
 // import {
 //   CheckSquare,
@@ -447,5 +446,4 @@
 //   );
 // }
 
-// app/page.tsx
 export { default } from './(marketing)/page';
