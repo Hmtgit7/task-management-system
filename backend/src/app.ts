@@ -17,12 +17,24 @@ import { categoryRouter } from "@modules/categories/category.routes";
 export const app = express();
 
 app.use(helmet());
-app.use(
-  cors({
-    origin: env.CORS_ORIGIN,
-    credentials: true,
-  }),
-);
+
+const allowedOrigins = env.CORS_ORIGIN.split(",").map((o) => o.trim());
+
+const corsOptions: cors.CorsOptions = {
+  origin: (origin, callback) => {
+    // Allow server-to-server requests with no origin (e.g. curl, Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes("*") || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    callback(new Error(`CORS: origin '${origin}' not allowed`));
+  },
+  credentials: true,
+};
+
+// Handle CORS preflight (OPTIONS) for all routes explicitly
+app.options("*", cors(corsOptions));
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

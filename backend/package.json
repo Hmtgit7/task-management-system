@@ -5,9 +5,9 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "nodemon",
-    "build": "prisma generate && tsc",
+    "build": "prisma generate && tsc && tsc-alias",
     "postinstall": "prisma generate",
-    "start": "node -r tsconfig-paths/register dist/server.js",
+    "start": "node dist/server.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
@@ -32,6 +32,7 @@
     "morgan": "^1.10.1",
     "pg": "^8.18.0",
     "prisma": "^7.4.0",
+    "tsc-alias": "^1.8.10",
     "winston": "^3.19.0",
     "zod": "^4.3.6"
   },
