@@ -1,4 +1,3 @@
-// src/middleware/authenticate.ts
 import type { NextFunction, Request, Response } from "express";
 import { verifyAccessToken } from "@utils/jwt";
 import { ApiError } from "@utils/ApiError";

@@ -1,4 +1,3 @@
-// src/utils/logger.ts
 import { createLogger, format, transports } from "winston";
 import type { StreamOptions } from "morgan";
 import { env } from "@config/env";

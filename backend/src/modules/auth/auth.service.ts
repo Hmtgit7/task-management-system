@@ -1,4 +1,3 @@
-// src/modules/auth/auth.service.ts
 import bcrypt from "bcryptjs";
 import { prisma } from "@config/database";
 import { ApiError } from "@utils/ApiError";

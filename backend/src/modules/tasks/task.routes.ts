@@ -1,4 +1,3 @@
-// src/modules/tasks/task.routes.ts
 import { Router } from "express";
 import { validate } from "@middleware/validate";
 import { authenticate } from "@middleware/authenticate";

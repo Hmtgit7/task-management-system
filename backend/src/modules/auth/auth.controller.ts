@@ -1,4 +1,3 @@
-// src/modules/auth/auth.controller.ts
 import type { Request, Response } from "express";
 import {
   loginUser,

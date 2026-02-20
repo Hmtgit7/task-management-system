@@ -1,4 +1,3 @@
-// src/utils/ApiError.ts
 export class ApiError extends Error {
   public statusCode: number;
   public isOperational: boolean;

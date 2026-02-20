@@ -1,4 +1,3 @@
-// src/middleware/notFound.ts
 import type { Request, Response, NextFunction } from "express";
 import { ApiError } from "@utils/ApiError";
 

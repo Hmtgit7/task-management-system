@@ -1,4 +1,3 @@
-// src/server.ts
 import { env } from '@config/env';
 import { app } from './app';
 import { logger } from '@utils/logger';

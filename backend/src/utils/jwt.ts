@@ -1,4 +1,3 @@
-// src/utils/jwt.ts
 import jwt, { type SignOptions } from "jsonwebtoken";
 import { env } from "@config/env";
 
