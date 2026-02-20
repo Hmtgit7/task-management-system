@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -179,7 +179,6 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
-
 /* ── Base layer ── */
 @layer base {
   * {
@@ -188,13 +187,15 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings:
-      "rlig" 1,
-      "calt" 1;
+      'rlig' 1,
+      'calt' 1;
     overflow-x: hidden;
   }
   html {
     scroll-behavior: smooth;
     overflow-x: hidden;
+    /* Reserve scrollbar space to prevent layout shift when dropdowns open */
+    scrollbar-gutter: stable;
   }
 }
 
@@ -213,7 +214,6 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-
   /* Glow effects */
   .glow-pink {
     box-shadow:
@@ -240,11 +240,7 @@
     border: 1px solid rgba(0, 0, 0, 0.08);
   }
   .dark .glass-dark {
-    background: linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.04),
-      rgba(255, 255, 255, 0.01)
-    );
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
     border-color: rgba(255, 255, 255, 0.07);
   }
 
