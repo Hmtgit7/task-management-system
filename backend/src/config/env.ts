@@ -13,7 +13,7 @@ const envSchema = z.object({
   REFRESH_TOKEN_SECRET: z.string().min(20),
   ACCESS_TOKEN_EXPIRES_IN: z.string().default("15m"),
   REFRESH_TOKEN_EXPIRES_IN: z.string().default("7d"),
-  CORS_ORIGIN: z.string(),
+  CORS_ORIGIN: z.string().default("http://localhost:3000"),
 });
 
 const parsed = envSchema.safeParse(process.env);
