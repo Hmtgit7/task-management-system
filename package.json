@@ -8,7 +8,7 @@
     "backend"
   ],
   "scripts": {
-    "prepare": "husky",
+    "prepare": "husky || true",
     "commit": "git-cz",
     "format": "prettier --write \"**/*.{js,ts,tsx,jsx,json,css,md,yml}\" --ignore-path .prettierignore",
     "format:check": "prettier --check \"**/*.{js,ts,tsx,jsx,json,css,md,yml}\" --ignore-path .prettierignore"
